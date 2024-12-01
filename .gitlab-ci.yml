@@ -1,0 +1,15 @@
+stages: 
+  - deploy 
+
+deploy:  
+  stage: deploy   
+  script:
+    - apt-get update -y 
+    - apt-get install -y sshpass
+    - sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP '
+     cd /home/gymbody_flipa/ &&
+     git pull origin main &&
+     pm2 restart gymbody_flipa
+     ' 
+  only:
+    - main
