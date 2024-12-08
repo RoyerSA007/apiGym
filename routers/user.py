@@ -28,6 +28,13 @@ def get_users() -> List[User]:
     result = UserService(db).get_Usuarios()
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
+@user_router.get('/nameByID/{id}', tags=['users'], response_model=User)
+def get_user(id: int = Path(ge=1, le=2000)) -> User:
+    db = Session()
+    result = UserService(db).get_name_of_user_by_id(id)
+    if not result:
+        return JSONResponse(status_code=404, content={'message': "No encontrado"})
+    return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
 @user_router.get('/userById/{id}', tags=['users'], response_model=User)
 def get_user(id: int = Path(ge=1, le=2000)) -> User:

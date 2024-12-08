@@ -1,6 +1,7 @@
 from models.user import User as UserModel
 from schemas.user import User, LoginRequest, LoginResponse
 from passlib.context import CryptContext
+from fastapi import HTTPException
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -18,6 +19,14 @@ class UserService():
         result =  self.db.query(UserModel).filter(UserModel.id == id).first()
         return result
     
+    def get_name_of_user_by_id(self, user_id: int) -> str:
+        # Verificar si el usuario existe
+        user_exists = self.db.query(UserModel).filter(UserModel.id == user_id).first()        
+        if user_exists is None:
+            raise HTTPException(status_code=404, detail="No se encontro el usuario")
+        return user_exists.name
+
+
     def create_usuario(self, usuario : User):
         new_Usuario =  UserModel(**usuario.model_dump())
         self.db.add(new_Usuario)
@@ -70,3 +79,5 @@ class UserService():
             isLogged=True,
             message="Bienvenido"
         )
+    
+    

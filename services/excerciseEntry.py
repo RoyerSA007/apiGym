@@ -172,8 +172,11 @@ class ExcerciseEntryService():
                 EntradaEjercicioModel.exercise_id,
                 EntradaEjercicioModel.weight,
                 EntradaEjercicioModel.reps,
-                EjercicioModel.nombre
+                EjercicioModel.nombre,
+                EntradaEjercicioModel.date,
+                UserModel.name
             )
+
             .join(EjercicioModel, EjercicioModel.id_ex == EntradaEjercicioModel.exercise_id)
             .filter(EntradaEjercicioModel.user_id == user_id)
             .all()
@@ -185,9 +188,11 @@ class ExcerciseEntryService():
         # Formatear el resultado como una lista de diccionarios, que incluye el nombre del ejercicio, peso y repeticiones
         results = [
             {
+                "nombreUser":entry.name,
                 "nombre": entry.nombre,
                 "peso": entry.weight,
-                "reps": entry.reps
+                "reps": entry.reps,
+                "fecha": entry.date
             }
             for entry in entries
         ]
