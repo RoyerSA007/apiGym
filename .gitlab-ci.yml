@@ -7,9 +7,9 @@ deploy:
     - apt-get update -y 
     - apt-get install -y sshpass
     - sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP '
-     cd /home/gymbody/ &&
+     cd /home/GymBody/ &&
      git pull origin main &&
-     pm2 restart gymbody
+     pm2 restart GymBody
      ' 
   only:
     - main
