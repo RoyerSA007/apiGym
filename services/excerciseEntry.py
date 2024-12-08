@@ -73,8 +73,6 @@ class ExcerciseEntryService():
 
         return weights
 
-
-    
     def get_reps_by_user_and_exercise(self, user_id: int, exercise_id: int) -> List[float]:
         # Verificar si el usuario existe
         user_exists = self.db.query(UserModel).filter(UserModel.id == user_id).first()
@@ -159,7 +157,7 @@ class ExcerciseEntryService():
         )
 
         return entries 
-    
+
     def get_excercises_by_user(self, user_id: int) -> List[dict]:
         # Verificar si el usuario existe
         user_exists = self.db.query(UserModel).filter(UserModel.id == user_id).first()
@@ -169,26 +167,21 @@ class ExcerciseEntryService():
         # Obtener todas las entradas de ejercicio del usuario con exercise_id, peso y repeticiones
         entries = (
             self.db.query(
-                EntradaEjercicioModel.exercise_id,
+                EjercicioModel.nombre.label("nombre"),
                 EntradaEjercicioModel.weight,
                 EntradaEjercicioModel.reps,
-                EjercicioModel.nombre,
                 EntradaEjercicioModel.date,
-                UserModel.name
             )
-
             .join(EjercicioModel, EjercicioModel.id_ex == EntradaEjercicioModel.exercise_id)
             .filter(EntradaEjercicioModel.user_id == user_id)
             .all()
         )
-        
         if not entries:
             raise HTTPException(status_code=404, detail="No se encontraron entradas de ejercicio para el usuario")
 
         # Formatear el resultado como una lista de diccionarios, que incluye el nombre del ejercicio, peso y repeticiones
         results = [
             {
-                "nombreUser":entry.name,
                 "nombre": entry.nombre,
                 "peso": entry.weight,
                 "reps": entry.reps,
